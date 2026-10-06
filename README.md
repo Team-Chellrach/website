@@ -36,7 +36,7 @@ the outputs.
 The form on `/contact/` submits to **Netlify Forms**. Netlify registers the form at
 deploy time from `public/__forms.html`, so keep that file's fields in sync with
 `components/ContactForm.tsx`. Turn on form detection and email notifications in the
-Netlify dashboard (Site configuration → Forms) and send them to hello@chellrach.com.
+Netlify dashboard (Site configuration → Forms) and send them to info@chellrach.com.
 
 ## Security checks
 

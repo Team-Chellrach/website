@@ -5,7 +5,7 @@ export const COMPANY = {
   legalName: 'CHELLRACH GLOBAL LIMITED',
   shortName: 'Chellrach',
   url: 'https://chellrach.com',
-  email: 'hello@chellrach.com',
+  email: 'info@chellrach.com',
   tagline: 'We design, build and run software and cloud platforms, for our own products and for yours.',
   description:
     'Chellrach Global Limited designs, builds and runs software and cloud platforms: web, mobile and TV apps, cloud architecture, platform engineering, DevOps, SRE, security and networking.',
