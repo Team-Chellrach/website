@@ -55,6 +55,11 @@ organisation repos. The run summary lists each check's result; the findings them
 are in each job's log (code-scanning uploads need GitHub Advanced Security on private
 organisation repos). Checkov always passes, so read its log for what it reported.
 
+**Code quality (SonarCloud):** `.sonarcloud.properties` configures SonarCloud
+Automatic Analysis, the same setup as JollofTV. It needs no workflow or token:
+import this repository at sonarcloud.io (under a Team-Chellrach organisation) and
+SonarCloud analyses pull requests and `main` itself.
+
 To stop a pull request merging when a check fails, mark **Security summary** as a
 required status check in the repository's branch protection rules for `main`. Dependabot
 (`.github/dependabot.yml`) keeps npm packages and the pinned actions up to date.
