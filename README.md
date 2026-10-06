@@ -38,6 +38,27 @@ deploy time from `public/__forms.html`, so keep that file's fields in sync with
 `components/ContactForm.tsx`. Turn on form detection and email notifications in the
 Netlify dashboard (Site configuration → Forms) and send them to hello@chellrach.com.
 
+## Security checks
+
+`.github/workflows/security.yml` runs on pull requests only (not on push or merge to
+`main`), and can be started by hand from the Actions tab:
+
+| Check | Blocks the build on |
+|-------|---------------------|
+| Dependency audit (`npm audit`) | high or critical advisories |
+| Secret scan (gitleaks, full git history) | any secret found |
+| Trivy (dependencies, secrets, config) | high or critical findings with a fix available |
+| Checkov (workflows and config) | nothing: advisory only |
+
+gitleaks runs from its container because `gitleaks-action` needs a paid licence for
+organisation repos. The run summary lists each check's result; the findings themselves
+are in each job's log (code-scanning uploads need GitHub Advanced Security on private
+organisation repos). Checkov always passes, so read its log for what it reported.
+
+To stop a pull request merging when a check fails, mark **Security summary** as a
+required status check in the repository's branch protection rules for `main`. Dependabot
+(`.github/dependabot.yml`) keeps npm packages and the pinned actions up to date.
+
 ## Deploy
 
 `netlify.toml` sets the build command (`npm run build`) and publish directory (`out`).
