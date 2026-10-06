@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!--
+  Netlify Forms registration. Netlify scans static HTML at deploy time to learn
+  each form's name and fields; the React form in components/ContactForm.tsx
+  posts here with the same names. Keep the field list in sync with that file.
+-->
+<html lang="en">
+  <head><meta charset="utf-8"><meta name="robots" content="noindex"></head>
+  <body>
+    <form name="contact" data-netlify="true" netlify-honeypot="company-website" hidden>
+      <input type="hidden" name="form-name" value="contact">
+      <input name="company-website">
+      <input name="name">
+      <input name="email" type="email">
+      <input name="company">
+      <select name="topic"><option value="">-</option></select>
+      <textarea name="message"></textarea>
+    </form>
+  </body>
+</html>

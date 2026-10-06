@@ -1,0 +1,114 @@
+name: Security
+
+# Security checks for chellrach.com, modelled on JollofTV's security-scan.yml
+# and adapted for this repo:
+#
+# - It belongs to the Team-Chellrach organisation, where gitleaks-action needs
+#   a paid licence key, so gitleaks runs from its official container instead.
+# - It is a private organisation repo, where uploading SARIF to code scanning
+#   needs GitHub Advanced Security, so results go to the job log and summary.
+#
+# Every action is pinned to a full commit SHA (tag in the comment);
+# Dependabot keeps them current (.github/dependabot.yml).
+
+# Pull requests only: not on push or merge to main. Can also be started by hand
+# from the Actions tab.
+on:
+  pull_request:
+  workflow_dispatch: {}
+
+# A new push to a pull request cancels that PR's run still in progress.
+concurrency:
+  group: security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: 'npm'
+      # npm ci installs exactly what the lockfile pins and fails if it disagrees
+      # with package.json, so the audit result is reproducible from the commit.
+      - run: npm ci
+      # High and critical advisories fail the build; moderate and low are reported.
+      - run: npm audit --audit-level=high
+
+  gitleaks:
+    name: Secret scan (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # full history, so a secret committed and later deleted is still found
+      # Image pinned by digest (the tag is for readers). Dependabot does not
+      # update images inside run steps: bump both together by hand.
+      - name: Scan git history
+        run: |
+          docker run --rm -v "$GITHUB_WORKSPACE:/repo" \
+            ghcr.io/gitleaks/gitleaks:v8.30.1@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f \
+            git /repo --redact --verbose --no-banner
+
+  trivy:
+    name: Trivy (vulnerabilities, secrets, misconfiguration)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Scans package-lock.json for known vulnerabilities, every file for
+      # secrets, and config files (workflows, netlify.toml) for misconfiguration.
+      - uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,secret,misconfig
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          skip-dirs: node_modules,.next,out
+          format: table
+          exit-code: '1'
+
+  checkov:
+    name: Checkov (workflow and config policy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # Advisory only (soft_fail), as in JollofTV: it reports on the GitHub
+      # Actions workflows and config without blocking a merge.
+      - uses: bridgecrewio/checkov-action@a76233b2c1d4a820a9dc68be350c473a4a9dceec # v12.3130.0
+        with:
+          directory: .
+          framework: all
+          output_format: cli
+          quiet: false
+          soft_fail: true
+          skip_check: CKV_GIT_1,CKV2_GHA_1,CKV_GHA_7
+
+  summary:
+    name: Security summary
+    runs-on: ubuntu-latest
+    needs: [audit, gitleaks, trivy, checkov]
+    if: always()
+    steps:
+      - name: Summarise and enforce
+        env:
+          JOB_RESULTS: ${{ toJSON(needs) }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs')
+          const results = JSON.parse(process.env.JOB_RESULTS)
+          const names = { audit: 'Dependency audit', gitleaks: 'Secret scan', trivy: 'Trivy', checkov: 'Checkov (advisory)' }
+          const rows = Object.entries(results).map(([job, { result }]) => `| ${names[job] ?? job} | ${result} |`)
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, ['### Security checks', '', '| Check | Result |', '|---|---|', ...rows, ''].join('\n'))
+          const failed = Object.entries(results).filter(([, { result }]) => result !== 'success').map(([job]) => job)
+          if (failed.length) {
+            console.error(`Security checks did not pass: ${failed.join(', ')}`)
+            process.exit(1)
+          }
+          NODE
