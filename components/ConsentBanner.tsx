@@ -80,7 +80,7 @@ export default function ConsentBanner() {
           <div className="flex items-start justify-between gap-4 border-t border-line pt-3">
             <label htmlFor={toggleId} className="cursor-pointer">
               <span className="block font-semibold text-fg">Analytics</span>
-              <span className="block text-muted">Anonymous visit statistics with PostHog, hosted in the EU.</span>
+              <span className="block text-muted">Anonymous visit statistics, hosted in the EU.</span>
             </label>
             <button
               id={toggleId}
