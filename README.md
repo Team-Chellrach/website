@@ -31,6 +31,24 @@ its store has approved it.
 **Logos:** after replacing a file in `assets/brand/`, run `npm run gen:brand` and commit
 the outputs.
 
+## Analytics and consent
+
+PostHog (EU cloud) provides anonymous analytics, and only after a visitor accepts it in
+the consent banner (`components/ConsentBanner.tsx`: Accept all, Reject all, or
+Customise then Confirm choices). Before that, no PostHog script, cookie or request
+loads. Visitors can change their choice from **Privacy settings** in the footer.
+
+- Configure with `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` (see
+  `.env.example`). Without a token there is no analytics and no banner.
+- No person profiles or session recordings; the contact form sends only the topic chosen.
+- Events: `start_project_clicked`, `jolloftv_link_clicked`, `email_link_clicked`,
+  `email_copied`, `contact_form_submitted`, `contact_form_failed`,
+  `architecture_step_viewed`, `theme_changed`, plus automatic pageviews.
+- Add click tracking to a link with `data-track="event_name"` and optional
+  `data-track-location="where"`.
+- If analytics or its categories change, bump `CONSENT_VERSION` in `lib/consent.ts`
+  so visitors are asked again, and update the privacy policy.
+
 ## Contact form
 
 The form on `/contact/` submits to **Netlify Forms**. Netlify registers the form at

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Logo from './Logo'
+import PrivacySettingsButton from './PrivacySettingsButton'
 import { ArrowUpRightIcon } from './icons'
 import { COMPANY, JOLLOFTV } from '@/lib/site'
 
@@ -30,7 +31,7 @@ export default function Footer() {
 
           <div className="space-y-3 text-sm">
             <p className="font-mono text-xs font-medium uppercase tracking-[0.1em] text-fg">Products</p>
-            <a href={JOLLOFTV.url} target="_blank" rel="noopener" className={`inline-flex items-center gap-1 ${linkClass}`}>
+            <a href={JOLLOFTV.url} target="_blank" rel="noopener" data-track="jolloftv_link_clicked" data-track-location="footer" className={`inline-flex items-center gap-1 ${linkClass}`}>
               JollofTV <ArrowUpRightIcon className="h-3.5 w-3.5" />
             </a>
           </div>
@@ -39,6 +40,7 @@ export default function Footer() {
             <p className="font-mono text-xs font-medium uppercase tracking-[0.1em] text-fg">Legal</p>
             <Link href="/privacy/" className={`block ${linkClass}`}>Privacy Policy</Link>
             <Link href="/terms/" className={`block ${linkClass}`}>Terms of Use</Link>
+            <PrivacySettingsButton className={`block text-left ${linkClass}`} />
           </div>
         </div>
 

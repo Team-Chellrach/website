@@ -138,6 +138,8 @@ export default function HomePage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/contact/"
+                data-track="start_project_clicked"
+                data-track-location="hero"
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-brand px-[22px] py-[13px] text-[15px] font-semibold text-white transition-transform hover:-translate-y-px"
               >
                 Start a project <ArrowRightIcon className="h-4 w-4" />
@@ -291,6 +293,8 @@ export default function HomePage() {
             <div className="relative flex flex-wrap items-center gap-3">
               <Link
                 href="/contact/"
+                data-track="start_project_clicked"
+                data-track-location="closing_cta"
                 className="rounded-full bg-white px-[22px] py-[13px] text-[15px] font-semibold text-[#0f1a24] transition-transform hover:-translate-y-px"
               >
                 Start a project

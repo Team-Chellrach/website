@@ -5,3 +5,5 @@ next-env.d.ts
 *.tsbuildinfo
 .netlify
 .DS_Store
+.env*.local
+.env

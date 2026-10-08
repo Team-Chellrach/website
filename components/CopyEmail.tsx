@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { CopyIcon } from './icons'
 import { COMPANY } from '@/lib/site'
+import { track } from '@/lib/analytics'
 
 // The email as a mailto link, with a button that copies the address for
 // people whose device has no mail app set up.
@@ -13,6 +14,7 @@ export default function CopyEmail() {
     try {
       await navigator.clipboard.writeText(COMPANY.email)
       setCopied(true)
+      track('email_copied')
       window.setTimeout(() => setCopied(false), 1600)
     } catch {
       // Clipboard blocked: the address is still on screen to select by hand.
@@ -21,7 +23,7 @@ export default function CopyEmail() {
 
   return (
     <span className="inline-flex items-center overflow-hidden rounded-full border border-white/45">
-      <a href={`mailto:${COMPANY.email}`} className="px-4 py-3 font-mono text-[15px] leading-none text-white hover:bg-white/10">
+      <a href={`mailto:${COMPANY.email}`} data-track="email_link_clicked" data-track-location="closing_cta" className="px-4 py-3 font-mono text-[15px] leading-none text-white hover:bg-white/10">
         {COMPANY.email}
       </a>
       <button

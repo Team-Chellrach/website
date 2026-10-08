@@ -4,6 +4,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Reveal from '@/components/Reveal'
 import Spotlight from '@/components/Spotlight'
+import ConsentBanner from '@/components/ConsentBanner'
 import { COMPANY, JOLLOFTV } from '@/lib/site'
 import { themeInitScript } from '@/lib/theme'
 import './globals.css'
@@ -99,6 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Footer />
         <Reveal />
         <Spotlight />
+        <ConsentBanner />
       </body>
     </html>
   )
