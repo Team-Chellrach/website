@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { JOLLOFTV } from '@/lib/site'
+import { track } from '@/lib/analytics'
 
 const NODES = [
   {
@@ -42,7 +43,10 @@ export default function ArchFlow() {
             id={`arch-tab-${i}`}
             aria-selected={i === selected}
             aria-controls="arch-detail"
-            onClick={() => setSelected(i)}
+            onClick={() => {
+              setSelected(i)
+              track('architecture_step_viewed', { step: n.key })
+            }}
             className={`relative grid gap-1.5 rounded-xl border p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff7a5c] ${
               i === selected ? 'border-[#ff7a5c] bg-[#1c1512]' : 'border-stage-line bg-stage-2 hover:border-[#5a6470]'
             }`}

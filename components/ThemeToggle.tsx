@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { MoonIcon, SunIcon } from './icons'
 import { THEME_STORAGE_KEY } from '@/lib/theme'
+import { track } from '@/lib/analytics'
 
 const systemQuery = () => window.matchMedia('(prefers-color-scheme: dark)')
 
@@ -32,6 +33,7 @@ export default function ThemeToggle() {
   function toggle() {
     const dark = !document.documentElement.classList.contains('dark')
     document.documentElement.classList.toggle('dark', dark)
+    track('theme_changed', { theme: dark ? 'dark' : 'light' })
     try {
       if (dark === systemQuery().matches) localStorage.removeItem(THEME_STORAGE_KEY)
       else localStorage.setItem(THEME_STORAGE_KEY, dark ? 'dark' : 'light')

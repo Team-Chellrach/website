@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useState, type FormEvent } from 'react'
 import { CONTACT_TOPICS, COMPANY } from '@/lib/site'
 import { CheckIcon } from './icons'
+import { track } from '@/lib/analytics'
 
 // Submissions go to Netlify Forms. Netlify learns the form's fields at deploy
 // time from public/__forms.html — keep the two in sync. Without JavaScript the
@@ -24,6 +25,8 @@ export default function ContactForm() {
     const data = new FormData(e.currentTarget)
     const body = new URLSearchParams()
     data.forEach((value, key) => body.append(key, String(value)))
+    // Only the chosen topic is tracked, never what the visitor typed.
+    const topic = String(data.get('topic') ?? '')
     try {
       const res = await fetch('/__forms.html', {
         method: 'POST',
@@ -31,8 +34,10 @@ export default function ContactForm() {
         body: body.toString(),
       })
       setStatus(res.ok ? 'sent' : 'error')
+      track(res.ok ? 'contact_form_submitted' : 'contact_form_failed', res.ok ? { topic } : { topic, status: res.status })
     } catch {
       setStatus('error')
+      track('contact_form_failed', { topic, status: 0 })
     }
   }
 

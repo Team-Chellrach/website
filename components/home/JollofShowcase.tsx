@@ -60,6 +60,8 @@ export default function JollofShowcase() {
               href={JOLLOFTV.url}
               target="_blank"
               rel="noopener"
+              data-track="jolloftv_link_clicked"
+              data-track-location="showcase"
               className="inline-flex items-center gap-2 justify-self-start rounded-full bg-jollof px-[22px] py-[13px] text-[15px] font-semibold text-white transition-transform hover:-translate-y-px"
             >
               Visit jolloftv.com <ArrowUpRightIcon className="h-4 w-4" />

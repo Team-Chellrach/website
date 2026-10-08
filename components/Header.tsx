@@ -39,6 +39,8 @@ export default function Header() {
           <ThemeToggle />
           <Link
             href="/contact/"
+            data-track="start_project_clicked"
+            data-track-location="header"
             className="hidden rounded-full bg-gradient-brand px-5 py-2.5 text-sm font-semibold text-white transition-transform hover:-translate-y-px md:inline-flex"
           >
             Start a project
@@ -71,6 +73,8 @@ export default function Header() {
           <Link
             href="/contact/"
             onClick={() => setOpen(false)}
+            data-track="start_project_clicked"
+            data-track-location="mobile_menu"
             className="mt-2 block rounded-full bg-gradient-brand px-5 py-3 text-center font-semibold text-white"
           >
             Start a project
