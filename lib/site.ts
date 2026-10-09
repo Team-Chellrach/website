@@ -14,7 +14,7 @@ export const COMPANY = {
 export type PlatformStatus = 'live' | 'review' | 'development'
 
 // JollofTV figures are copied by hand from what jolloftv.com shows (last
-// checked 6 October 2026). Nothing syncs them: when jolloftv.com's rounded
+// checked 8 October 2026). Nothing syncs them: when jolloftv.com's rounded
 // figures change, update these too. Platform statuses change as each store
 // approves the app.
 export const JOLLOFTV = {
@@ -25,7 +25,7 @@ export const JOLLOFTV = {
   platforms: [
     { name: 'Web', status: 'live' },
     { name: 'iOS', status: 'review' },
-    { name: 'Android', status: 'review' },
+    { name: 'Android', status: 'live' },
     { name: 'Android TV', status: 'review' },
     { name: 'Samsung TV', status: 'review' },
     { name: 'LG TV', status: 'development' },
