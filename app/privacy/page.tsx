@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import LegalPage from '@/components/LegalPage'
 import { COMPANY } from '@/lib/site'
 
@@ -83,6 +84,9 @@ export default function PrivacyPage() {
                 settings</strong> at the bottom of every page. If you withdraw it, analytics stops, the PostHog
                 cookie and identifiers are removed from your browser, and a small marker recording your opt-out is
                 kept so analytics stays off.
+              </p>
+              <p>
+                Full details of each cookie are in our <Link href="/cookies/">Cookie Policy</Link>.
               </p>
             </>
           ),

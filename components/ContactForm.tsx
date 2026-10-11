@@ -14,7 +14,7 @@ const FORM_NAME = 'contact'
 type Status = 'idle' | 'sending' | 'sent' | 'error'
 
 const fieldClass =
-  'mt-2 block w-full rounded-xl border border-line bg-bg px-4 py-3 text-fg placeholder:text-muted/70 focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30'
+  'mt-2 block w-full border border-line bg-surface px-4 py-3 text-fg placeholder:text-muted/70 focus:border-fg focus:outline-none'
 
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>('idle')
@@ -43,11 +43,11 @@ export default function ContactForm() {
 
   if (status === 'sent') {
     return (
-      <div role="status" className="rounded-2xl border border-line bg-surface p-8 text-center">
-        <span className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-full bg-brand-green/15 text-brand-green">
+      <div role="status" className="border border-line bg-surface p-8 text-center">
+        <span className="mx-auto inline-flex h-12 w-12 items-center justify-center border border-brand-green text-brand-green">
           <CheckIcon className="h-6 w-6" />
         </span>
-        <h2 className="mt-4 font-display text-2xl font-bold text-fg">Thanks, we&apos;ve got your message</h2>
+        <h2 className="mt-5 text-[28px] leading-tight text-fg">Thanks, we&apos;ve got your message</h2>
         <p className="mt-2 text-muted">We&apos;ll reply to the email address you gave us.</p>
       </div>
     )
@@ -59,7 +59,7 @@ export default function ContactForm() {
       method="POST"
       action="/contact/thanks/"
       onSubmit={onSubmit}
-      className="rounded-2xl border border-line bg-surface p-6 sm:p-8"
+      className="border-t border-fg pt-8"
     >
       <input type="hidden" name="form-name" value={FORM_NAME} />
       {/* Honeypot: hidden from people, filled in by bots, rejected by Netlify. */}
@@ -116,9 +116,9 @@ export default function ContactForm() {
       </p>
 
       {status === 'error' && (
-        <p role="alert" className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+        <p role="alert" className="mt-4 border border-red-700/40 px-4 py-3 text-sm text-red-700 dark:border-red-300/40 dark:text-red-300">
           Sorry, your message didn&apos;t send. Please try again, or email us at{' '}
-          <a href={`mailto:${COMPANY.email}`} className="font-semibold underline">
+          <a href={`mailto:${COMPANY.email}`} className="font-medium underline">
             {COMPANY.email}
           </a>
           .
@@ -128,7 +128,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === 'sending'}
-        className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-gradient-brand px-6 py-3 font-semibold text-white transition-opacity hover:opacity-90 disabled:opacity-60 sm:w-auto"
+        className="btn-outline mt-7 w-full disabled:opacity-60 sm:w-auto"
       >
         {status === 'sending' ? 'Sending…' : 'Send message'}
       </button>

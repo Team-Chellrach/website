@@ -19,8 +19,8 @@ npm run build      # static site in out/
 | What | Where |
 |------|-------|
 | Company facts, JollofTV figures, nav, contact topics | `lib/site.ts` |
-| Pages | `app/` (home, contact, privacy, terms) |
-| Light/dark colours and brand tokens | `app/globals.css` |
+| Pages | `app/` (home, contact, privacy, cookies, terms) |
+| Light/dark colours, type and brand tokens (editorial: serif headlines, paper and ink) | `app/globals.css` |
 | Designer's logo files (source) | `assets/brand/` |
 | Generated logos, favicons, share card | `public/brand/`, `app/icon.png`, `app/apple-icon.png`, `public/favicon.ico`, `public/og-image.png` |
 
@@ -36,12 +36,14 @@ the outputs.
 PostHog (EU cloud) provides anonymous analytics, and only after a visitor accepts it in
 the consent banner (`components/ConsentBanner.tsx`: Accept all, Reject all, or
 Customise then Confirm choices). Before that, no PostHog script, cookie or request
-loads. Visitors can change their choice from **Privacy settings** in the footer.
+loads. **Preferences** opens a side panel with the categories, and visitors can change
+their choice any time from **Privacy settings** in the footer. Each cookie is listed on
+`/cookies/` (the Cookie Policy); keep that page in step with what the site stores.
 
 - Configure with `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and `NEXT_PUBLIC_POSTHOG_HOST` (see
   `.env.example`). Without a token there is no analytics and no banner.
 - No person profiles or session recordings; the contact form sends only the topic chosen.
-- Events: `start_project_clicked`, `jolloftv_link_clicked`, `email_link_clicked`,
+- Events: `start_project_clicked`, `jolloftv_link_clicked`, `google_play_clicked`, `email_link_clicked`,
   `email_copied`, `contact_form_submitted`, `contact_form_failed`,
   `architecture_step_viewed`, `theme_changed`, plus automatic pageviews.
 - Add click tracking to a link with `data-track="event_name"` and optional

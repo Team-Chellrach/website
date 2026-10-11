@@ -1,16 +1,15 @@
 import type { Metadata, Viewport } from 'next'
-import { IBM_Plex_Mono, IBM_Plex_Sans, Plus_Jakarta_Sans } from 'next/font/google'
+import { IBM_Plex_Mono, Instrument_Sans, Newsreader } from 'next/font/google'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Reveal from '@/components/Reveal'
-import Spotlight from '@/components/Spotlight'
 import ConsentBanner from '@/components/ConsentBanner'
 import { COMPANY, JOLLOFTV } from '@/lib/site'
 import { themeInitScript } from '@/lib/theme'
 import './globals.css'
 
-const body = IBM_Plex_Sans({ subsets: ['latin'], variable: '--font-body', weight: ['400', '500', '600'], display: 'swap' })
-const heading = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-heading', weight: ['600', '700', '800'], display: 'swap' })
+const body = Instrument_Sans({ subsets: ['latin'], variable: '--font-body', display: 'swap' })
+const serif = Newsreader({ subsets: ['latin'], variable: '--font-serif', style: ['normal', 'italic'], axes: ['opsz'], display: 'swap' })
 const code = IBM_Plex_Mono({ subsets: ['latin'], variable: '--font-code', weight: ['400', '500'], display: 'swap' })
 
 export const metadata: Metadata = {
@@ -40,8 +39,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#f5f7fa' },
-    { media: '(prefers-color-scheme: dark)', color: '#0f1216' },
+    { media: '(prefers-color-scheme: light)', color: '#f3f0e9' },
+    { media: '(prefers-color-scheme: dark)', color: '#141615' },
   ],
 }
 
@@ -78,7 +77,7 @@ const organizationJsonLd = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     // suppressHydrationWarning: the theme script adds `dark` before React loads.
-    <html lang="en" suppressHydrationWarning className={`${body.variable} ${heading.variable} ${code.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${body.variable} ${serif.variable} ${code.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script
@@ -86,10 +85,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
-      <body className="flex min-h-screen flex-col font-sans">
+      <body className="flex min-h-screen flex-col font-sans text-[16px] leading-[1.65]">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:shadow"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:border focus:border-fg focus:bg-bg focus:px-4 focus:py-2 focus:text-sm"
         >
           Skip to content
         </a>
@@ -99,7 +98,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <Footer />
         <Reveal />
-        <Spotlight />
         <ConsentBanner />
       </body>
     </html>
