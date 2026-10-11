@@ -13,23 +13,25 @@ export const COMPANY = {
 
 export type PlatformStatus = 'live' | 'review' | 'development'
 
+export const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.jolloftv.app'
+
 // JollofTV figures are copied by hand from what jolloftv.com shows (last
 // checked 8 October 2026). Nothing syncs them: when jolloftv.com's rounded
 // figures change, update these too. Platform statuses change as each store
-// approves the app.
+// approves the app; add its store link as `url` then.
 export const JOLLOFTV = {
   name: 'JollofTV',
   url: 'https://www.jolloftv.com',
   channels: '130+',
   stations: '175+',
   platforms: [
-    { name: 'Web', status: 'live' },
+    { name: 'Web', status: 'live', url: 'https://www.jolloftv.com', label: 'Web: watch JollofTV at jolloftv.com' },
     { name: 'iOS', status: 'review' },
-    { name: 'Android', status: 'live' },
+    { name: 'Android', status: 'live', url: GOOGLE_PLAY_URL, label: 'Android: get JollofTV on Google Play' },
     { name: 'Android TV', status: 'review' },
-    { name: 'Samsung TV', status: 'review' },
-    { name: 'LG TV', status: 'development' },
-  ] satisfies { name: string; status: PlatformStatus }[],
+    { name: 'Samsung Tizen', status: 'review' },
+    { name: 'LG webOS', status: 'development' },
+  ] satisfies { name: string; status: PlatformStatus; url?: string; label?: string }[],
   languages: 7,
 } as const
 
@@ -37,6 +39,7 @@ export const NAV_LINKS = [
   { href: '/#services', label: 'Services' },
   { href: '/#work', label: 'Our work' },
   { href: '/#how', label: 'How we work' },
+  { href: '/contact/', label: 'Contact' },
 ] as const
 
 export const CONTACT_TOPICS = [

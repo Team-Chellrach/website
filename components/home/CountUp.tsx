@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 
 // Shows the final figure (e.g. "130+") at rest, then counts up to it once when
 // it scrolls into view. Skipped for reduced motion.
-export default function CountUp({ value }: { value: string }) {
+export default function CountUp({ value }: Readonly<{ value: string }>) {
   const match = /^(\d+)(.*)$/.exec(value)
   const target = match ? Number(match[1]) : 0
   const suffix = match ? match[2] : ''
@@ -13,7 +13,7 @@ export default function CountUp({ value }: { value: string }) {
 
   useEffect(() => {
     const el = ref.current
-    if (!el || !match || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    if (!el || !target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     let raf = 0
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -21,7 +21,7 @@ export default function CountUp({ value }: { value: string }) {
         observer.disconnect()
         const start = performance.now()
         const step = (now: number) => {
-          const p = Math.min(1, (now - start) / 1200)
+          const p = Math.min(1, (now - start) / 1400)
           setShown(`${Math.round(target * (1 - Math.pow(1 - p, 3)))}${suffix}`)
           if (p < 1) raf = requestAnimationFrame(step)
         }
@@ -34,9 +34,7 @@ export default function CountUp({ value }: { value: string }) {
       observer.disconnect()
       cancelAnimationFrame(raf)
     }
-  }, [value])
+  }, [target, suffix])
 
-  return (
-    <span ref={ref}>{shown}</span>
-  )
+  return <span ref={ref}>{shown}</span>
 }

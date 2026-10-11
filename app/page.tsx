@@ -1,95 +1,65 @@
 import Link from 'next/link'
-import { Fragment } from 'react'
-import Hexagon from '@/components/Hexagon'
-import Lifecycle from '@/components/home/Lifecycle'
-import HexNetwork from '@/components/home/HexNetwork'
-import JollofShowcase from '@/components/home/JollofShowcase'
 import CopyEmail from '@/components/CopyEmail'
-import Engagements from '@/components/home/Engagements'
-import {
-  ActivityIcon,
-  ArrowRightIcon,
-  CloudIcon,
-  CodeIcon,
-  EyeIcon,
-  FileCodeIcon,
-  InfinityIcon,
-  LayersIcon,
-  NetworkIcon,
-  ShieldIcon,
-  SparklesIcon,
-  UnlockIcon,
-  type IconComponent,
-} from '@/components/icons'
+import Lifecycle from '@/components/home/Lifecycle'
+import Terminal from '@/components/home/Terminal'
+import JollofShowcase from '@/components/home/JollofShowcase'
+import { Fragment } from 'react'
 
-const CAPABILITIES: [IconComponent, string][] = [
-  [CloudIcon, 'Cloud'],
-  [LayersIcon, 'Platform'],
-  [InfinityIcon, 'DevOps'],
-  [ActivityIcon, 'SRE'],
-  [ShieldIcon, 'Security'],
-  [NetworkIcon, 'Networking'],
-  [CodeIcon, 'Software'],
-]
-
-const SERVICES: { icon: IconComponent; title: string; body: string; tags: string[]; software?: boolean }[] = [
+const SERVICES: { title: string; body: string; tags: string[]; highlight?: string }[] = [
   {
-    icon: CloudIcon,
     title: 'Cloud architecture and migration',
     body: 'Design new cloud foundations or move existing workloads, right-sized from the start, with clear cost visibility.',
     tags: ['AWS', 'Azure', 'Google Cloud', 'Landing zones', 'AWS & Azure Well-Architected', 'Cost optimisation'],
+    highlight: 'AWS & Azure Well-Architected',
   },
   {
-    icon: LayersIcon,
     title: 'Platform engineering',
     body: 'Internal platforms on Kubernetes that let your developers ship safely, with more autonomy.',
     tags: ['Kubernetes', 'OpenShift', 'Helm', 'Self-service'],
   },
   {
-    icon: InfinityIcon,
     title: 'DevOps and CI/CD',
     body: 'Automated, repeatable delivery, with every environment defined in code and every change reviewed.',
     tags: ['Terraform', 'ArgoCD', 'GitHub Actions', 'Azure DevOps'],
   },
   {
-    icon: ActivityIcon,
     title: 'Site reliability and scalability',
     body: 'Telemetry from metrics, logs and traces, SLOs and incident response, plus the architecture to handle growth and traffic spikes.',
     tags: ['OpenTelemetry', 'SLOs', 'Autoscaling', 'Incident response'],
   },
   {
-    icon: ShieldIcon,
     title: 'Security and DevSecOps',
     body: 'Security built into code, pipelines and infrastructure, with compliance checks automated.',
     tags: ['Vulnerability scanning', 'Secrets', 'Policy-as-code', 'IAM'],
   },
   {
-    icon: NetworkIcon,
     title: 'Networking and connectivity',
     body: 'Secure, reliable connectivity between clouds, on-premises systems, services and users.',
     tags: ['VPC / VNet design', 'Hybrid & multi-cloud', 'Private endpoints', 'CDN & edge'],
   },
   {
-    icon: CodeIcon,
     title: 'Software development',
     body: 'Web, mobile and smart-TV apps, and the backends and APIs behind them.',
     tags: ['Web', 'iOS & Android', 'Smart TV', 'APIs'],
-    software: true,
   },
   {
-    icon: SparklesIcon,
     title: 'AI and LLM integration',
     body: 'LLM-powered features in your products, retrieval over your own data, and MCP servers that connect AI assistants to your tools.',
     tags: ['LLMs', 'RAG', 'AI agents', 'MCP'],
-    software: true,
   },
 ]
 
-const PRINCIPLES: [IconComponent, string, string][] = [
-  [ShieldIcon, 'Secure by default', 'Least-privilege access, encrypted data and scanned dependencies from the start.'],
-  [FileCodeIcon, 'Everything as code', 'Infrastructure, pipelines and policies in version control: reviewed, repeatable and easy to roll back.'],
-  [EyeIcon, 'Observable', 'Metrics, logs and alerts built into what we ship, so problems are spotted early, often before users notice.'],
-  [UnlockIcon, 'Portable by design', 'Open tooling and standard patterns that are easy to maintain, extend or move. Your code and infrastructure stay yours.'],
+const PRINCIPLES = [
+  ['Secure by default', 'Least-privilege access, encrypted data and scanned dependencies from the start.'],
+  ['Everything as code', 'Infrastructure, pipelines and policies in version control: reviewed, repeatable and easy to roll back.'],
+  ['Observable', 'Metrics, logs and alerts built into what we ship, so problems are spotted early, often before users notice.'],
+  ['Portable by design', 'Open tooling and standard patterns that are easy to maintain, extend or move. Your code and infrastructure stay yours.'],
+]
+
+const ENGAGEMENTS = [
+  ['Fixed-scope projects', 'A clear outcome, timeline and price. New products, migrations, platform builds.'],
+  ['Advisory and architecture reviews', 'An expert second opinion on your setup, costs, security or reliability, with a written plan.'],
+  ['Monthly support retainers', 'Ongoing hands-on help to run, maintain and improve your platform.'],
 ]
 
 const TECHNOLOGIES = [
@@ -98,8 +68,13 @@ const TECHNOLOGIES = [
   'Next.js', 'React', 'React Native', 'TypeScript', 'PostgreSQL', 'Supabase', 'Stripe', 'Sentry', 'MCP',
 ]
 
-// Splits text into words that rise in one after another when the card is revealed.
-function Words({ text, start = 0, step = 0.06 }: { text: string; start?: number; step?: number }) {
+const wrap = 'mx-auto max-w-[1240px] px-6'
+const section = 'py-[clamp(56px,8vw,104px)]'
+const h2 = 'text-[clamp(30px,3.4vw,44px)] leading-[1.15]'
+const label = 'caps text-muted'
+
+// Splits a headline into words that rise in one after another when revealed.
+function Words({ text, start = 0, step = 0.07 }: Readonly<{ text: string; start?: number; step?: number }>) {
   return text.split(' ').map((word, i) => (
     <Fragment key={i}>
       {i > 0 && ' '}
@@ -110,160 +85,207 @@ function Words({ text, start = 0, step = 0.06 }: { text: string; start?: number;
   ))
 }
 
-const sectionHead = 'reveal mb-11 grid max-w-[680px] gap-3.5'
-const eyebrow = 'font-mono text-xs uppercase tracking-[0.12em] text-brand-blue'
-const h2 = 'font-display text-[clamp(28px,4vw,40px)] font-bold leading-[1.12] tracking-tight'
-const lead = 'max-w-[60ch] text-lg text-muted'
+const PACKETS = [
+  { path: 'M0,-260 L225,-130 L225,130 L0,260 L-225,130 L-225,-130 Z', dur: '10s', begin: '0s', r: 7, tone: 'fill-brand-blue' },
+  { path: 'M0,-180 L-156,-90 L-156,90 L0,180 L156,90 L156,-90 Z', dur: '8s', begin: '0s', r: 6, tone: 'fill-brand-green' },
+  { path: 'M0,-260 L0,-100', dur: '2.6s', begin: '0s', r: 5, tone: 'fill-brand-blue' },
+  { path: 'M225,130 L87,50', dur: '2.6s', begin: '0.9s', r: 5, tone: 'fill-brand-green' },
+  { path: 'M-225,130 L-87,50', dur: '2.6s', begin: '1.7s', r: 5, tone: 'fill-brand-blue' },
+]
+
+// The logo's hexagon as a line drawing behind the hero: it sketches itself in,
+// then packets of "traffic" travel its lines.
+function HexDrawing({ className = '' }: Readonly<{ className?: string }>) {
+  return (
+    <svg viewBox="-300 -300 600 600" fill="none" stroke="currentColor" aria-hidden="true" className={`hex-sketch ${className}`}>
+      <polygon points="0,-260 225,-130 225,130 0,260 -225,130 -225,-130" strokeWidth="1.5" pathLength={1} />
+      <polygon points="0,-180 156,-90 156,90 0,180 -156,90 -156,-90" strokeWidth="1.5" pathLength={1} />
+      <polygon points="0,-100 87,-50 87,50 0,100 -87,50 -87,-50" strokeWidth="24" pathLength={1} />
+      <line x1="0" y1="-260" x2="0" y2="-100" strokeWidth="1.5" pathLength={1} />
+      <line x1="225" y1="130" x2="87" y2="50" strokeWidth="1.5" pathLength={1} />
+      <line x1="-225" y1="130" x2="-87" y2="50" strokeWidth="1.5" pathLength={1} />
+      <circle cx="0" cy="-260" r="9" fill="currentColor" stroke="none" />
+      <circle cx="225" cy="130" r="9" fill="currentColor" stroke="none" />
+      <circle cx="-225" cy="130" r="9" fill="currentColor" stroke="none" />
+      {PACKETS.map(p => (
+        <circle key={p.path + p.begin} className={`packet ${p.tone}`} r={p.r} stroke="none">
+          <animateMotion path={p.path} dur={p.dur} begin={p.begin} repeatCount="indefinite" />
+        </circle>
+      ))}
+    </svg>
+  )
+}
 
 export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden pb-[88px] pt-[72px]">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-[20%] -top-[20%] h-[70%] w-[80%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--blue)_12%,transparent),transparent)]" />
-          <div className="absolute -bottom-[30%] -right-[20%] h-[90%] w-[70%] bg-[radial-gradient(closest-side,color-mix(in_srgb,var(--green)_13%,transparent),transparent)]" />
-          <HexNetwork className="opacity-70 [mask-image:radial-gradient(ellipse_85%_110%_at_62%_45%,#000_25%,transparent_80%)] max-lg:opacity-40 dark:opacity-100 dark:max-lg:opacity-60" />
+      <section className="relative overflow-hidden pb-[clamp(56px,7vw,96px)] pt-[clamp(64px,9vw,120px)]">
+        <div className="reveal pointer-events-none absolute -right-[120px] -top-[80px] h-[680px] w-[680px] text-line max-lg:-right-[200px] max-lg:-top-[40px] max-lg:h-[440px] max-lg:w-[440px]">
+          {/* Fade lives on the drawing, not the wrapper, so the reveal animation can't override it. */}
+          <HexDrawing className="h-full w-full max-lg:opacity-45" />
         </div>
-        <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-5 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <p className={eyebrow}>Chellrach Global Limited</p>
-            <h1 className="mt-[18px] font-display text-[clamp(38px,5.4vw,62px)] font-extrabold leading-[1.04] tracking-tight">
-              We design, build and run <span className="text-gradient">software and cloud platforms.</span>
-            </h1>
-            <p className={`${lead} mt-[22px]`}>
-              Web, mobile and TV apps, and the cloud, DevOps, SRE, security and networking that keep them running. One team
-              from first design to production.
+        <div className={`${wrap} relative grid items-end gap-12 lg:grid-cols-[1.25fr_1fr]`}>
+          <div className="reveal">
+            <p className={`${label} flex items-center gap-6 text-fg after:h-px after:max-w-[300px] after:flex-1 after:bg-line max-sm:after:hidden`}>
+              Software · Cloud · Platforms
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/contact/"
-                data-track="start_project_clicked"
-                data-track-location="hero"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-brand px-[22px] py-[13px] text-[15px] font-semibold text-white transition-transform hover:-translate-y-px"
-              >
-                Start a project <ArrowRightIcon className="h-4 w-4" />
+            <h1 className="mt-9 text-[clamp(44px,6.4vw,84px)] leading-[1.04]">
+              <Words text="We design, build and run software and cloud" />{' '}
+              <em className="rise inline-block text-brand-blue" style={{ animationDelay: '0.65s' }}>
+                platforms.
+              </em>
+            </h1>
+            <p className="mt-7 max-w-[52ch] text-[18px] leading-relaxed text-muted">
+              Web, mobile and TV apps, and the cloud, DevOps, SRE, security and networking that keep them running.
+            </p>
+            <div className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-5">
+              <Link href="/contact/" data-track="start_project_clicked" data-track-location="hero" className="btn-solid">
+                Start a project <span aria-hidden="true">→</span>
               </Link>
-              <Link
-                href="/#services"
-                className="inline-flex items-center rounded-full border border-line bg-surface px-[22px] py-[13px] text-[15px] font-semibold text-fg transition-colors hover:border-brand-blue"
-              >
-                Explore our services
+              <Link href="/#work" className="text-link">
+                See our work
               </Link>
             </div>
           </div>
-          <Lifecycle />
-        </div>
-      </section>
-
-      {/* Capabilities */}
-      <section aria-label="What we do">
-        <div className="reveal mx-auto flex max-w-6xl flex-wrap justify-start gap-x-[22px] gap-y-3.5 border-y border-line px-5 py-[26px] sm:justify-between">
-          {CAPABILITIES.map(([Icon, label]) => (
-            <Link
-              key={label}
-              href="/#services"
-              className="hex-turn inline-flex w-[calc(50%-11px)] items-center gap-2.5 font-display text-[17px] font-bold text-fg transition-colors hover:text-brand-blue sm:w-auto"
-            >
-              <Hexagon icon={Icon} size="sm" />
-              {label}
-            </Link>
-          ))}
+          <div className="reveal grid min-w-0 gap-10 pb-3 max-lg:hidden lg:border-l lg:border-line lg:pl-10">
+            <p className="font-display text-[clamp(19px,1.8vw,23px)] leading-normal">
+              Software shapes how a business works.
+              <br />
+              Platforms decide how far it can grow.
+              <br />
+              Operations decide whether it lasts.
+            </p>
+          </div>
         </div>
       </section>
 
       <JollofShowcase />
 
       {/* Services */}
-      <section id="services" className="py-20 sm:py-[88px]">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className={sectionHead}>
-            <p className={eyebrow}>Services</p>
-            <h2 className={h2}>Cloud, platform and software engineering, end to end.</h2>
-            <p className={lead}>
+      <section id="services" className={`${section} border-t border-line`}>
+        <div className={wrap}>
+          <div className="reveal mb-[clamp(40px,5vw,72px)] grid items-end gap-5 lg:grid-cols-2 lg:gap-12">
+            <div>
+              <p className={label}>Services</p>
+              <h2 className={`${h2} mt-6`}>Cloud, platform and software engineering, end to end.</h2>
+            </div>
+            <p className="max-w-[52ch] text-muted">
               From product design and software delivery to cloud foundations, security and reliable operations. Bring us in
               for one piece or the whole journey.
             </p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {SERVICES.map(({ icon: Icon, title, body, tags, software }) => (
-              <article
-                key={title}
-                className="reveal draw-card spotlight group relative grid min-w-0 content-start gap-2.5 overflow-hidden rounded-[14px] border border-line bg-surface p-6 transition hover:-translate-y-[3px] hover:border-brand-blue/60"
-              >
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-brand transition-transform duration-500 group-hover:scale-x-100"
-                />
-                <span
-                  className={`draw-icon grid h-[42px] w-[42px] place-items-center rounded-[11px] ${
-                    software ? 'bg-brand-green/12 text-brand-green' : 'bg-brand-blue/10 text-brand-blue'
-                  }`}
-                >
-                  <Icon className="h-[21px] w-[21px]" strokeWidth={2} />
-                </span>
-                <h3 className="mt-1.5 font-display text-[19px] font-bold leading-tight">{title}</h3>
-                <p className="text-[15px] text-muted">{body}</p>
-                <ul className="mt-1.5 flex flex-wrap gap-1.5">
-                  {tags.map(tag => (
-                    <li key={tag} className="rounded-md bg-surface-2 px-2 py-1.5 font-mono text-[11.5px] leading-none text-muted">
-                      {tag}
-                    </li>
+          <div className="grid gap-x-[clamp(40px,6vw,96px)] md:grid-cols-2">
+            {SERVICES.map(s => (
+              <article key={s.title} className="reveal draw-rule group grid min-w-0 gap-2.5 pb-8 pt-7">
+                <h3 className="flex items-baseline gap-3 text-[26px] leading-tight transition-colors group-hover:text-brand-blue">
+                  {s.title}
+                  <span aria-hidden="true" className="-translate-x-2 text-[20px] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+                    →
+                  </span>
+                </h3>
+                <p className="max-w-[54ch] text-muted">{s.body}</p>
+                <p className="caps text-[11px] leading-[1.7] text-muted">
+                  {s.tags.map((tag, i) => (
+                    <span key={tag}>
+                      {i > 0 && ' · '}
+                      <span className={tag === s.highlight ? 'text-brand-green' : ''}>{tag}</span>
+                    </span>
                   ))}
-                </ul>
+                </p>
               </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Principles */}
-      <section aria-labelledby="principles-title" className="border-y border-line bg-surface py-20 sm:py-[88px]">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className={sectionHead}>
-            <p className={eyebrow}>How we engineer</p>
-            <h2 id="principles-title" className={h2}>Four things you can expect in everything we build.</h2>
+      {/* The approach */}
+      <section className={`${section} border-t border-line`}>
+        <div className={`${wrap} grid items-center gap-[clamp(40px,7vw,110px)] lg:grid-cols-[0.9fr_1.1fr]`}>
+          <div className="reveal">
+            <p className={label}>The approach</p>
+            <h2 className={`${h2} mt-6`}>Every platform begins with a plan, and keeps improving once it runs.</h2>
+            <div className="mt-6 grid max-w-[58ch] gap-[18px] text-muted">
+              <p>
+                Chellrach Global Limited designs, builds and runs software and the cloud platforms behind it, for our own
+                products and for clients. Each engagement starts with the business: who uses the software, what it has to do,
+                and what it costs to run.
+              </p>
+              <p>
+                From there, work moves through six stages, from discovery to day-to-day operation. What we learn in production
+                feeds straight back into the next sprint.
+              </p>
+            </div>
           </div>
-          <div className="grid gap-x-9 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-            {PRINCIPLES.map(([Icon, title, body]) => (
-              <div key={title} className="reveal draw-card hex-turn grid grid-cols-[44px_1fr] items-start gap-4">
-                <span className="draw-icon">
-                  <Hexagon icon={Icon} />
-                </span>
-                <div>
-                  <h3 className="font-display text-[19px] font-bold">{title}</h3>
-                  <p className="mt-1.5 text-[15px] text-muted">{body}</p>
-                </div>
+          <div className="reveal">
+            <Lifecycle />
+          </div>
+        </div>
+      </section>
+
+      {/* Statement */}
+      <section aria-label="How projects start" className="grid md:grid-cols-2">
+        <div className="reveal grid content-center gap-7 bg-block px-[clamp(24px,6vw,88px)] py-[clamp(48px,7vw,104px)] text-[#eef0ea]">
+          <p className="caps text-[#eef0ea]/70">How projects start</p>
+          <p className="font-display text-[clamp(28px,3vw,40px)] leading-tight">
+            <Words text="Some projects need a new product. Some need the platform underneath it. Most need both." step={0.05} />
+          </p>
+        </div>
+        <figure className="reveal unveil relative m-0 min-h-[420px] overflow-hidden bg-surface-2">
+          <img
+            src="/showcase/network-cables.webp"
+            alt="Network cables plugged into a patch panel in a server rack"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <Terminal />
+        </figure>
+      </section>
+
+      {/* How we work: principles, then ways to engage */}
+      <section id="how" className={section}>
+        <div className={wrap}>
+          <div className="reveal mb-[clamp(36px,4vw,56px)]">
+            <p className={label}>How we work</p>
+            <h2 className={`${h2} mt-6 max-w-[22ch]`}>Four things you can expect in everything we build.</h2>
+          </div>
+          <div className="grid gap-[clamp(28px,4vw,56px)] sm:grid-cols-2 lg:grid-cols-4">
+            {PRINCIPLES.map(([title, body]) => (
+              <div key={title} className="reveal draw-rule grid content-start gap-3 pt-6 [--rule-color:var(--fg)]">
+                <h3 className="text-[24px] leading-tight">{title}</h3>
+                <p className="text-[15px] text-muted">{body}</p>
+              </div>
+            ))}
+          </div>
+
+          <h3 className="reveal mb-[clamp(28px,3vw,40px)] mt-[clamp(56px,7vw,88px)] text-[clamp(26px,2.6vw,34px)] leading-tight">
+            Three ways to work with us.
+          </h3>
+          <div className="grid gap-[clamp(28px,4vw,56px)] md:grid-cols-3">
+            {ENGAGEMENTS.map(([title, body]) => (
+              <div key={title} className="reveal draw-rule grid content-start gap-3 pt-6">
+                <h4 className="font-display text-[22px] leading-tight">{title}</h4>
+                <p className="text-[15px] text-muted">{body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How we work */}
-      <section id="how" aria-labelledby="how-title" className="py-20 sm:py-[88px]">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className={sectionHead}>
-            <p className={eyebrow}>How we work</p>
-            <h2 id="how-title" className={h2}>Three ways to work with us.</h2>
-          </div>
-          <Engagements />
-        </div>
-      </section>
-
-      {/* Technologies */}
-      <section aria-label="Technologies we work with" className="overflow-hidden border-y border-line py-10">
-        <p className="mb-5 text-center text-sm text-muted">Technologies we work with</p>
-        <div className="fade-edges">
-          <div className="marquee flex w-max">
+      {/* Technologies: a slow scrolling strip (a wrapped list when motion is reduced) */}
+      <section aria-label="Technologies we work with" className="overflow-hidden border-t border-line py-14">
+        <p className={`${wrap} ${label} mb-6`}>Technologies we work with</p>
+        <div className="marquee-mask">
+          <div className="marquee-track flex w-max">
             {[0, 1].map(copy => (
-              <ul key={copy} aria-hidden={copy === 1} className="flex gap-3 px-1.5">
+              <ul
+                key={copy}
+                aria-hidden={copy === 1}
+                className={`m-0 flex list-none p-0 font-display text-[clamp(20px,2.2vw,28px)] leading-relaxed text-muted ${copy === 1 ? 'marquee-dup' : ''}`}
+              >
                 {TECHNOLOGIES.map(name => (
-                  <li
-                    key={name}
-                    className="whitespace-nowrap rounded-full border border-line bg-surface px-4 py-[11px] font-mono text-sm leading-none text-fg"
-                  >
-                    {name}
+                  <li key={name} className="flex items-center whitespace-nowrap">
+                    <span className="transition-colors hover:text-fg">{name}</span>
+                    <span className="mx-6 text-line" aria-hidden="true">·</span>
                   </li>
                 ))}
               </ul>
@@ -272,35 +294,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Call to action */}
-      <section className="py-24">
-        <div className="mx-auto max-w-6xl px-5">
-          <div className="reveal draw-card cta-gradient cta-sheen relative isolate grid gap-[22px] overflow-hidden rounded-3xl p-[clamp(36px,6vw,64px)] text-white">
-            <HexNetwork
-              tone="onBrand"
-              hex={30}
-              pulses={14}
-              className="-z-10 [mask-image:linear-gradient(100deg,transparent_15%,#000_60%)] max-md:[mask-image:linear-gradient(180deg,transparent_30%,#000_90%)]"
-            />
-            <div aria-hidden="true" className="drift hexagon absolute -bottom-20 -right-16 -z-10 h-[360px] w-80 bg-white/[0.08]" />
-            <div aria-hidden="true" className="drift-slow hexagon absolute -top-10 right-[28%] -z-10 h-[120px] w-[104px] bg-white/[0.06]" />
-            <h2 className="max-w-[18ch] font-display text-[clamp(30px,4.6vw,48px)] font-bold leading-[1.08] tracking-tight">
-              <Words text="Focus on what you do best: running your business." />
-            </h2>
-            <p className="max-w-[54ch] text-lg text-white/90">
-              <Words text="Tell us what you're building, improving or running, and we'll take it from there." start={0.45} step={0.025} />
-            </p>
-            <div className="relative flex flex-wrap items-center gap-3">
-              <Link
-                href="/contact/"
-                data-track="start_project_clicked"
-                data-track-location="closing_cta"
-                className="rounded-full bg-white px-[22px] py-[13px] text-[15px] font-semibold text-[#0f1a24] transition-transform hover:-translate-y-px"
-              >
-                Start a project
-              </Link>
-              <CopyEmail />
-            </div>
+      {/* Closing */}
+      <section className={`${section} border-t border-line`}>
+        <div className={`${wrap} grid items-end gap-12 lg:grid-cols-[1.4fr_1fr]`}>
+          <h2 className="reveal text-[clamp(38px,5.2vw,68px)] leading-[1.06]">
+            <Words text="Focus on what you do best:" />{' '}
+            <em className="text-brand-green">
+              <Words text="running your business." start={0.4} />
+            </em>
+          </h2>
+          <div className="reveal grid gap-7">
+            <p className="max-w-[44ch] text-muted">Tell us what you&apos;re building, improving or running, and we&apos;ll take it from there.</p>
+            <Link href="/contact/" data-track="start_project_clicked" data-track-location="closing_cta" className="btn-solid justify-self-start">
+              Start a project <span aria-hidden="true">→</span>
+            </Link>
+            <CopyEmail />
           </div>
         </div>
       </section>

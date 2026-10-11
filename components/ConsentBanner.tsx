@@ -1,19 +1,20 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { analyticsConfigured, startAnalytics, stopAnalytics } from '@/lib/analytics'
 import { OPEN_CONSENT_EVENT, readConsent, saveConsent } from '@/lib/consent'
 
-// GDPR consent: Accept all, Reject all, or Customise then Confirm choices.
-// Accept and Reject carry equal weight, analytics is off until accepted, and
-// the choice can be changed any time from "Privacy settings" in the footer.
+// GDPR consent. The box offers Accept all and Reject all with equal weight,
+// and Preferences opens a side panel with the categories. Analytics stays off
+// until accepted; "Privacy settings" in the footer reopens the panel.
 export default function ConsentBanner() {
-  const [open, setOpen] = useState(false)
-  const [customising, setCustomising] = useState(false)
+  const [bannerOpen, setBannerOpen] = useState(false)
+  const [panelOpen, setPanelOpen] = useState(false)
   const [analytics, setAnalytics] = useState(false)
-  const titleId = useId()
-  const toggleId = useId()
+  const bannerTitle = useId()
+  const panelTitle = useId()
+  const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     if (!analyticsConfigured) return
@@ -22,118 +23,142 @@ export default function ConsentBanner() {
       setAnalytics(choice.analytics)
       if (choice.analytics) startAnalytics()
     } else {
-      setOpen(true)
+      setBannerOpen(true)
     }
     const reopen = () => {
       setAnalytics(readConsent()?.analytics ?? false)
-      setCustomising(true)
-      setOpen(true)
+      setPanelOpen(true)
     }
     window.addEventListener(OPEN_CONSENT_EVENT, reopen)
     return () => window.removeEventListener(OPEN_CONSENT_EVENT, reopen)
   }, [])
+
+  useEffect(() => {
+    if (!panelOpen) return
+    closeRef.current?.focus()
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setPanelOpen(false)
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [panelOpen])
 
   function decide(allowAnalytics: boolean) {
     saveConsent(allowAnalytics)
     setAnalytics(allowAnalytics)
     if (allowAnalytics) startAnalytics()
     else stopAnalytics()
-    setOpen(false)
-    setCustomising(false)
+    setBannerOpen(false)
+    setPanelOpen(false)
   }
 
-  if (!open) return null
-
-  const button =
-    'rounded-full px-5 py-2.5 text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue'
-  const secondary = `${button} border border-line bg-surface text-fg hover:border-brand-blue`
-  const primary = `${button} bg-gradient-brand text-white`
+  if (!analyticsConfigured) return null
 
   return (
-    <section
-      role="dialog"
-      aria-labelledby={titleId}
-      className="fixed inset-x-3 bottom-3 z-[70] rounded-2xl border border-line bg-surface p-5 shadow-[0_20px_60px_-20px_rgba(17,24,32,0.45)] sm:inset-x-auto sm:bottom-6 sm:left-6 sm:max-w-md sm:p-6"
-      style={{ marginBottom: 'env(safe-area-inset-bottom, 0px)' }}
-    >
-      <h2 id={titleId} className="font-display text-lg font-bold text-fg">
-        Your privacy
-      </h2>
-      <p className="mt-2 text-sm leading-relaxed text-muted">
-        We&apos;d like to use analytics to understand how visitors use this site. It&apos;s anonymous and stays off
-        unless you accept. See our{' '}
-        <Link href="/privacy/" className="font-medium text-fg underline underline-offset-2">
-          Privacy Policy
-        </Link>
-        .
-      </p>
-
-      {customising && (
-        <div className="mt-4 grid gap-3 rounded-xl border border-line bg-bg p-4 text-sm">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="font-semibold text-fg">Necessary</p>
-              <p className="text-muted">Remembers your theme and this choice. Always on.</p>
-            </div>
-            <span className="shrink-0 font-mono text-xs text-muted">Always on</span>
-          </div>
-          <div className="flex items-start justify-between gap-4 border-t border-line pt-3">
-            <label htmlFor={toggleId} className="cursor-pointer">
-              <span className="block font-semibold text-fg">Analytics</span>
-              <span className="block text-muted">Anonymous visit statistics, hosted in the EU.</span>
-            </label>
-            <button
-              id={toggleId}
-              type="button"
-              role="switch"
-              aria-checked={analytics}
-              onClick={() => setAnalytics(a => !a)}
-              className={`relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue ${
-                analytics ? 'bg-brand-green' : 'bg-line'
-              }`}
-            >
-              <span
-                className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
-                  analytics ? 'translate-x-5' : ''
-                }`}
-              />
-              <span className="sr-only">Allow analytics</span>
+    <>
+      {bannerOpen && !panelOpen && (
+        <section
+          role="dialog"
+          aria-labelledby={bannerTitle}
+          className="fixed bottom-3 left-3 right-3 z-[70] grid gap-[18px] border border-fg bg-bg p-[22px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.35)] sm:bottom-6 sm:left-6 sm:right-auto sm:w-[560px] sm:px-8 sm:pb-[30px] sm:pt-7"
+          style={{ marginBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        >
+          <p id={bannerTitle} className="caps text-muted">
+            Your privacy
+          </p>
+          <p className="text-[15px] leading-relaxed">
+            We&apos;d like to use analytics to understand how visitors use this site. It&apos;s anonymous and stays off
+            unless you accept. See our{' '}
+            <Link href="/cookies/" className="underline underline-offset-[3px]">
+              Cookie Policy
+            </Link>
+            .
+          </p>
+          <div className="flex flex-wrap items-center gap-x-3.5 gap-y-3">
+            <button type="button" className="btn-outline max-sm:flex-1" onClick={() => decide(true)}>
+              Accept all
+            </button>
+            <button type="button" className="btn-outline max-sm:flex-1" onClick={() => decide(false)}>
+              Reject all
+            </button>
+            <button type="button" className="caps border-b border-current pb-1 text-fg" onClick={() => setPanelOpen(true)}>
+              Preferences
             </button>
           </div>
-        </div>
+        </section>
       )}
 
-      <div className="mt-4 flex flex-wrap gap-2">
-        {customising ? (
-          <>
-            <button type="button" className={primary} onClick={() => decide(analytics)}>
-              Confirm choices
-            </button>
-            <button type="button" className={secondary} onClick={() => decide(false)}>
-              Reject all
-            </button>
-            <button type="button" className={secondary} onClick={() => decide(true)}>
-              Accept all
-            </button>
-          </>
-        ) : (
-          <>
-            <button type="button" className={secondary} onClick={() => decide(true)}>
-              Accept all
-            </button>
-            <button type="button" className={secondary} onClick={() => decide(false)}>
-              Reject all
-            </button>
-            <button
-              type="button"
-              className={`${button} text-muted underline underline-offset-2 hover:text-fg`}
-              onClick={() => setCustomising(true)}
-            >
-              Customise
-            </button>
-          </>
-        )}
-      </div>
-    </section>
+      {panelOpen && (
+        <>
+          <div className="fixed inset-0 z-[75] bg-[rgba(20,22,21,0.45)]" onClick={() => setPanelOpen(false)} aria-hidden="true" />
+          <aside
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={panelTitle}
+            className="fixed inset-y-0 right-0 z-[80] grid w-full max-w-[560px] content-start gap-7 overflow-y-auto border-l border-line bg-bg p-[clamp(28px,4vw,56px)]"
+          >
+            <div className="flex items-baseline justify-between gap-4">
+              <h2 id={panelTitle} className="text-[32px] leading-tight">
+                Cookie preferences
+              </h2>
+              <button ref={closeRef} type="button" className="caps border-b border-current pb-1 text-fg" onClick={() => setPanelOpen(false)}>
+                Close
+              </button>
+            </div>
+            <p className="text-muted">
+              Choose what you allow. Strictly necessary storage is always on because the site needs it to work.
+            </p>
+
+            <div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-2 border-t border-line pt-[22px]">
+              <h3 className="text-[22px]">Strictly necessary</h3>
+              <Switch checked disabled label="Strictly necessary, always on" />
+              <p className="text-[15px] text-muted">Remembers your privacy choice and, if you change it, your light or dark theme.</p>
+              <span className="caps col-start-1 text-[11px] text-muted">Always on</span>
+            </div>
+
+            <div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-2 border-t border-line pt-[22px]">
+              <h3 className="text-[22px]">Analytics</h3>
+              <Switch checked={analytics} onChange={() => setAnalytics(a => !a)} label="Analytics" />
+              <p className="text-[15px] text-muted">Anonymous visit statistics, hosted in the EU. Off unless you allow it.</p>
+            </div>
+
+            <div className="flex flex-wrap gap-3 border-t border-line pt-7">
+              <button type="button" className="btn-outline" onClick={() => decide(analytics)}>
+                Save preferences
+              </button>
+              <button type="button" className="btn-outline" onClick={() => decide(true)}>
+                Accept all
+              </button>
+              <button type="button" className="btn-outline" onClick={() => decide(false)}>
+                Reject all
+              </button>
+            </div>
+            <Link href="/cookies/" className="text-link justify-self-start" onClick={() => setPanelOpen(false)}>
+              Read the cookie policy
+            </Link>
+          </aside>
+        </>
+      )}
+    </>
+  )
+}
+
+function Switch({ checked, disabled, onChange, label }: { checked: boolean; disabled?: boolean; onChange?: () => void; label: string }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
+      disabled={disabled}
+      onClick={onChange}
+      className={`relative col-start-2 row-start-1 h-[26px] w-[46px] rounded-full border transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${
+        checked ? 'border-brand-green bg-brand-green' : 'border-fg bg-transparent'
+      }`}
+    >
+      <span
+        className={`absolute left-[3px] top-[3px] h-[18px] w-[18px] rounded-full transition-transform ${
+          checked ? 'translate-x-5 bg-bg' : 'bg-fg'
+        }`}
+      />
+    </button>
   )
 }

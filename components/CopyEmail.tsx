@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { CopyIcon } from './icons'
 import { COMPANY } from '@/lib/site'
 import { track } from '@/lib/analytics'
 
@@ -22,19 +21,23 @@ export default function CopyEmail() {
   }
 
   return (
-    <span className="inline-flex items-center overflow-hidden rounded-full border border-white/45">
-      <a href={`mailto:${COMPANY.email}`} data-track="email_link_clicked" data-track-location="closing_cta" className="px-4 py-3 font-mono text-[15px] leading-none text-white hover:bg-white/10">
+    <div className="flex flex-wrap items-center gap-3.5">
+      <a
+        href={`mailto:${COMPANY.email}`}
+        data-track="email_link_clicked"
+        data-track-location="closing_cta"
+        className="font-mono text-[15px] text-fg hover:text-brand-blue"
+      >
         {COMPANY.email}
       </a>
       <button
         type="button"
         onClick={copy}
         aria-label={copied ? 'Email address copied' : 'Copy email address'}
-        title="Copy email address"
-        className="border-l border-white/45 px-3 py-3 text-white hover:bg-white/10"
+        className="caps border border-line px-2.5 py-2 text-[11px] text-muted transition-colors hover:border-fg hover:text-fg"
       >
-        {copied ? <span className="font-mono text-xs">Copied</span> : <CopyIcon className="h-[15px] w-[15px]" />}
+        {copied ? 'Copied' : 'Copy'}
       </button>
-    </span>
+    </div>
   )
 }
