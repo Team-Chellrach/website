@@ -18,7 +18,7 @@ export default function JollofShowcase() {
             <p className="caps text-jollof">Our work · Our product</p>
             <img src="/brand/jolloftv-wordmark-dark.svg" alt="JollofTV" className="mark-in h-11 w-auto justify-self-start" />
             <h2 id="work-title" className="text-[clamp(30px,3.4vw,44px)] leading-[1.15]">
-              Free live African TV and radio, for Africans everywhere.
+              Free live TV and radio for Africans, wherever you are.
             </h2>
             <p className="max-w-[54ch] text-stage-muted">
               JollofTV is our own streaming product, and the clearest example of what we do: the apps, the streaming

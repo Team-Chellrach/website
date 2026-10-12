@@ -4,6 +4,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import Reveal from '@/components/Reveal'
 import ConsentBanner from '@/components/ConsentBanner'
+import BackToTop from '@/components/BackToTop'
 import { COMPANY, JOLLOFTV } from '@/lib/site'
 import { themeInitScript } from '@/lib/theme'
 import './globals.css'
@@ -85,7 +86,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
       </head>
-      <body className="flex min-h-screen flex-col font-sans text-[16px] leading-[1.65]">
+      {/* suppressHydrationWarning: browser extensions such as Grammarly add attributes to <body> before React loads. */}
+      <body suppressHydrationWarning className="flex min-h-screen flex-col font-sans text-[16px] leading-[1.65]">
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:border focus:border-fg focus:bg-bg focus:px-4 focus:py-2 focus:text-sm"
@@ -98,6 +100,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <Footer />
         <Reveal />
+        <BackToTop />
         <ConsentBanner />
       </body>
     </html>
