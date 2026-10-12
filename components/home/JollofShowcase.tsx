@@ -80,14 +80,14 @@ export default function JollofShowcase() {
             </div>
           </div>
 
-          <div className="reveal relative mr-2 min-w-0 pb-11" aria-label="JollofTV on a smart TV and a phone">
+          <div className="reveal relative mr-2 min-w-0 pb-24" aria-label="JollofTV on a smart TV and a phone">
             <div className="tv-in">
               <div className="aspect-video overflow-hidden border-[10px] border-b-[14px] border-[#232624] bg-black">
-                <img src="/showcase/jolloftv-tv.webp" alt="JollofTV home screen on Android TV" className="h-full w-full object-cover" />
+                <img src="/showcase/jolloftv-tv-home-oct12.webp" alt="JollofTV home screen on TV featuring Africanews English with a live video preview" width={1600} height={900} loading="lazy" decoding="async" className="h-full w-full object-contain" />
               </div>
               <div className="mx-auto h-3 w-[24%] bg-[#232624]" />
             </div>
-            <div className="phone-in absolute -right-2 bottom-0 w-[27%]">
+            <div className="phone-in absolute -right-2 bottom-0 w-[24%]">
               <div className="aspect-[1179/2556] overflow-hidden rounded-[30px] border-[6px] border-[#1c1e1d] bg-[#0a0a0a] shadow-[-18px_24px_48px_-18px_rgba(0,0,0,0.9)]">
                 <img src="/showcase/jolloftv-phone.webp" alt="JollofTV live TV screen on iPhone" className="h-full w-full object-cover" />
               </div>
