@@ -5,7 +5,8 @@ import { COMPANY } from '@/lib/site'
 import { track } from '@/lib/analytics'
 
 // The email as a mailto link, with a button that copies the address for
-// people whose device has no mail app set up.
+// people whose device has no mail app set up. The button shows when the
+// pointer or keyboard focus is on the address; touch screens always show it.
 export default function CopyEmail() {
   const [copied, setCopied] = useState(false)
 
@@ -21,7 +22,7 @@ export default function CopyEmail() {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3.5">
+    <div className="group flex flex-wrap items-center gap-3.5">
       <a
         href={`mailto:${COMPANY.email}`}
         data-track="email_link_clicked"
@@ -34,7 +35,9 @@ export default function CopyEmail() {
         type="button"
         onClick={copy}
         aria-label={copied ? 'Email address copied' : 'Copy email address'}
-        className="caps border border-line px-2.5 py-2 text-[11px] text-muted transition-colors hover:border-fg hover:text-fg"
+        className={`caps border border-line px-2.5 py-2 text-[11px] text-muted transition-[opacity,color,border-color] duration-200 hover:border-fg hover:text-fg group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 ${
+          copied ? 'opacity-100' : 'opacity-0'
+        }`}
       >
         {copied ? 'Copied' : 'Copy'}
       </button>

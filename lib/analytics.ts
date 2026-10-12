@@ -36,6 +36,10 @@ export async function startAnalytics() {
     api_host: HOST,
     defaults: '2026-08-30',
     person_profiles: 'never',
+    // The 2026 defaults tag localhost visitors as test users by setting a
+    // person property, which 'never' rejects with a console warning. We keep
+    // no person data at all, so switch that tagging off.
+    internal_or_test_user_hostname: null,
     disable_session_recording: true,
     capture_exceptions: true,
   })
