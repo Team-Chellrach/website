@@ -15,7 +15,6 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="8 October 2026"
       intro={
         <p>
           This policy explains how {COMPANY.name} (&ldquo;Chellrach&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) handles
@@ -37,9 +36,9 @@ export default function PrivacyPage() {
                 abuse.
               </li>
               <li>
-                <strong className="text-fg">Only if you accept analytics:</strong> anonymous information about your
-                visit, such as the pages you view, the buttons you click, your browser and device type and where you came
-                from. Your IP address is discarded and not stored.
+                <strong className="text-fg">Only if you accept analytics:</strong> information about your visit, such
+                as the pages you view, the buttons you click, your browser and device type, and where you came from.
+                PostHog uses a random browser identifier to recognise repeat visits.
               </li>
             </ul>
           ),
@@ -70,10 +69,10 @@ export default function PrivacyPage() {
                 reject it, or want to choose. Until you accept, no analytics script runs and no analytics cookies are set.
               </p>
               <p>
-                If you accept, we use <strong className="text-fg">PostHog</strong>, hosted in the European Union. It is
-                anonymous: we don&apos;t create a profile of you, don&apos;t record your screen, and never send what you
-                type into the contact form. PostHog stores a random identifier in a cookie and in your browser&apos;s
-                storage (both starting with <code>ph_</code>) so it can recognise repeat visits.
+                If you accept, we use <strong className="text-fg">PostHog</strong>, hosted in the European Union. We
+                configure it not to create a person profile or record your screen. Contact-form text is not included in our tracked events. PostHog stores a random browser
+                identifier in a cookie and in your browser&apos;s storage (both starting with <code>ph_</code>) so it can
+                recognise repeat visits.
               </p>
               <p>
                 We also store two things in your browser that the site needs: your privacy choice and, if you change it,

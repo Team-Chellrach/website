@@ -33,7 +33,7 @@ the outputs.
 
 ## Analytics and consent
 
-PostHog (EU cloud) provides anonymous analytics, and only after a visitor accepts it in
+PostHog (EU cloud) provides analytics, and only after a visitor accepts it in
 the consent banner (`components/ConsentBanner.tsx`: Accept all, Reject all, or
 Customise then Confirm choices). Before that, no PostHog script, cookie or request
 loads. **Preferences** opens a side panel with the categories, and visitors can change
