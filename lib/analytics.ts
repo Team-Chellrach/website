@@ -3,8 +3,7 @@ import type { PostHog } from 'posthog-js'
 // PostHog analytics, loaded only after the visitor accepts analytics in the
 // consent banner. Before that, no script, cookie or request reaches PostHog.
 //
-// Anonymous by design: no person profiles, no session recordings, and nothing
-// typed into the contact form is sent.
+// Pseudonymous by design: no person profiles and no session recordings.
 
 const TOKEN = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN
 const HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com'

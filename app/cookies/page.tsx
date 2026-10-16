@@ -16,7 +16,6 @@ export default function CookiesPage() {
   return (
     <LegalPage
       title="Cookie Policy"
-      updated="11 October 2026"
       intro={
         <p>
           This policy explains the cookies and similar browser storage that chellrach.com uses, run by {COMPANY.name}, and
@@ -48,8 +47,9 @@ export default function CookiesPage() {
           body: (
             <>
               <p>
-                If you accept analytics, we use PostHog, hosted in the European Union, to count visits anonymously. Until
-                you accept, none of the following is set and no analytics script runs.
+                If you accept analytics, we use PostHog, hosted in the European Union, to understand how visitors use
+                the site. PostHog uses a random browser identifier to recognise repeat visits. Until you accept, none
+                of the following is set and no analytics script runs.
               </p>
               <div className="grid gap-3 text-[15px]">
                 <div className={row}>
@@ -61,7 +61,7 @@ export default function CookiesPage() {
                   <span>Browser storage set only if you reject analytics after accepting it, so analytics stays off.</span>
                 </div>
               </div>
-              <p>We don&apos;t use advertising or social media cookies, and analytics doesn&apos;t store your IP address.</p>
+              <p>We don&apos;t use advertising or social media cookies.</p>
             </>
           ),
         },

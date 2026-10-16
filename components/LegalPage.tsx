@@ -5,11 +5,10 @@ export interface LegalSection {
   body: ReactNode
 }
 
-export default function LegalPage({ title, updated, intro, sections }: { title: string; updated: string; intro: ReactNode; sections: LegalSection[] }) {
+export default function LegalPage({ title, intro, sections }: { title: string; intro: ReactNode; sections: LegalSection[] }) {
   return (
     <article className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
       <h1 className="text-[clamp(38px,5vw,56px)] leading-tight text-fg">{title}</h1>
-      <p className="caps mt-4 text-[11px] text-muted">Last updated: {updated}</p>
       <div className="mt-8 text-lg leading-relaxed text-muted">{intro}</div>
       <div className="mt-12 space-y-10">
         {sections.map((s, i) => (

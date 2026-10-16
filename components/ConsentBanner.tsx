@@ -65,8 +65,8 @@ export default function ConsentBanner() {
             Your privacy
           </p>
           <p className="text-[15px] leading-relaxed">
-            We&apos;d like to use analytics to understand how visitors use this site. It&apos;s anonymous and stays off
-            unless you accept. See our{' '}
+            We&apos;d like to use analytics to understand how visitors use this site. It stays off unless you accept.
+            See our{' '}
             <Link href="/cookies/" className="underline underline-offset-[3px]">
               Cookie Policy
             </Link>
@@ -117,7 +117,7 @@ export default function ConsentBanner() {
             <div className="grid grid-cols-[1fr_auto] gap-x-5 gap-y-2 border-t border-line pt-[22px]">
               <h3 className="text-[22px]">Analytics</h3>
               <Switch checked={analytics} onChange={() => setAnalytics(a => !a)} label="Analytics" />
-              <p className="text-[15px] text-muted">Anonymous visit statistics, hosted in the EU. Off unless you allow it.</p>
+              <p className="text-[15px] text-muted">Visit statistics, hosted in the EU. Off unless you allow it.</p>
             </div>
 
             <div className="flex flex-wrap gap-3 border-t border-line pt-7">

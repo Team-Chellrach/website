@@ -12,7 +12,6 @@ export default function TermsPage() {
   return (
     <LegalPage
       title="Terms of Use"
-      updated="6 October 2026"
       intro={
         <p>
           These terms apply to your use of chellrach.com, which is run by {COMPANY.name} (&ldquo;Chellrach&rdquo;,
