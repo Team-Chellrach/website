@@ -14,6 +14,7 @@ export const COMPANY = {
 export type PlatformStatus = 'live' | 'review' | 'development'
 
 export const GOOGLE_PLAY_URL = 'https://play.google.com/store/apps/details?id=com.jolloftv.app'
+export const GOOGLE_PLAY_TV_URL = 'https://play.google.com/store/apps/details?id=com.jolloftv.tv'
 
 // JollofTV figures are copied by hand from what jolloftv.com shows (last
 // checked 8 October 2026). Nothing syncs them: when jolloftv.com's rounded
@@ -28,7 +29,7 @@ export const JOLLOFTV = {
     { name: 'Web', status: 'live', url: 'https://www.jolloftv.com', label: 'Web: watch JollofTV at jolloftv.com' },
     { name: 'iOS', status: 'review' },
     { name: 'Android', status: 'live', url: GOOGLE_PLAY_URL, label: 'Android: get JollofTV on Google Play' },
-    { name: 'Android TV', status: 'review' },
+    { name: 'Android TV', status: 'live', url: GOOGLE_PLAY_TV_URL, label: 'Android TV: get JollofTV on Google Play' },
     { name: 'Samsung Tizen', status: 'review' },
     { name: 'LG webOS', status: 'development' },
   ] satisfies { name: string; status: PlatformStatus; url?: string; label?: string }[],

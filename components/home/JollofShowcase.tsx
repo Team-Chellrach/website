@@ -1,5 +1,6 @@
 import ArchFlow from './ArchFlow'
 import CountUp from './CountUp'
+import PlatformIcon from './PlatformIcon'
 import { GOOGLE_PLAY_URL, JOLLOFTV, type PlatformStatus } from '@/lib/site'
 
 const DOT: Record<PlatformStatus, string> = {
@@ -44,6 +45,7 @@ export default function JollofShowcase() {
                 return (
                   <li key={p.name} className={`inline-flex items-center gap-2 ${p.status === 'live' ? 'text-stage-fg' : ''}`}>
                     <span className={`h-[7px] w-[7px] rounded-full ${DOT[p.status]}`} />
+                    <PlatformIcon name={p.name} />
                     {url ? (
                       <a href={url} target="_blank" rel="noopener" className="underline-offset-4 hover:underline" aria-label={linkLabel}>
                         {p.name} ↗
